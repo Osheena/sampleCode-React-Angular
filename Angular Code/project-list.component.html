@@ -1,0 +1,135 @@
+<div class="left" [hidden]="isMobile || (!isMobile && !isCollapsed)">
+  <div class="collapse-header">
+    <button
+      type="button"
+      #buttonLeft
+      class="btn btn-link"
+      (click)="toggle()"
+    >
+      <i class="collapse-right-icon"></i>
+    </button>
+  </div>
+  <div class="project-list">
+    <div class="rotate">
+      {{'DASHBOARD.PROJECTS' | translate }}
+    </div>
+
+  </div>
+</div>
+
+<div class="row right" [hidden]="!isMobile && isCollapsed">
+  <div class="col">
+    <div class="row expand-header">
+      <div class="col-auto px-0">
+        <button
+          #buttonRight
+          type="button"
+          class="btn btn-link"
+          (click)="toggle()"
+        >
+          <i class="collapse-left-icon"></i>
+        </button>
+      </div>
+      <div class="col">
+        {{'DASHBOARD.PROJECTS' | translate }}
+      </div>
+    </div>
+    <div class="row align-items-center" *ngFor="let group of projects|dfProjectGroupBy: basicInfoCompanyId">
+      <div class="col px-3">
+        <div class="row">
+          <div class="col">
+            <div class="row subheader no-gutters justify-content-center align-items-center">
+              <div class="project-title">
+                <div class="title py-3">
+                  {{group.name}}
+                  <span
+                    class="col-auto px-0"
+                    *ngIf="group.isOwnerCompany"
+                    placement="right"
+                    container="body"
+                    triggers="mouseenter:mouseleave"
+                    popoverClass="people-projects"
+                    [ngbPopover]="popContent"
+                  >
+                    <i class="question-blue question-icon icon"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="add-project mr-auto text-right px-0">
+                <button
+                  class="btn btn-link btn-folder-resp"
+                  *ngIf="group.isAdmin"
+                  (click)="createProjectModal()"
+                >
+                  <i class="add-icon icon"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" *ngFor="let company of group.companies">
+          <div class="col project-group">
+            <div class="row no-gutters align-items-center" *ngIf="!group.isAdmin && !group.isOwnerCompany">
+              <div class="collaborator-projects">
+                <div class="title py-3">
+                  {{company.name}}
+                  <span
+                    class="col-auto px-0"
+                    placement="right"
+                    container="body"
+                    triggers="mouseenter:mouseleave"
+                    popoverClass="people-projects"
+                    [ngbPopover]="popContent"
+                  >
+                    <i class="question-blue question-icon icon"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 px-0" *ngFor="let project of company.projects">
+                <div class="row project-item justify-content-center align-items-center py-2">
+                  <div class="col-auto px-0">
+                    <div class="folder-icon icon-pos"></div>
+                  </div>
+                  <div class="col px-0 project-name-column">
+                    <a class="project-name item-link" [routerLink]="['/projects/project', project.id]">
+                      {{project.name}}
+                    </a>
+                  </div>
+                  <div class="col-auto pr-1">
+                    <div [ngSwitch]="project.pinned" class="pin icon-pos">
+                      <div *ngSwitchCase="true">
+                        <div class="unpin-icon" (click)="unpin(project.id)"></div>
+                        <div class="pin-icon show"></div>
+                      </div>
+                      <div
+                        *ngSwitchDefault
+                        class="pin-icon"
+                        (click)="pin(project.id)"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="(userAccessService.userIsAdminOwner$ | async) && projects.length === 0"
+          class="btn btn-standart btn-add"
+          role="button"
+          (click)="createProjectModal()"
+        >
+          {{'DASHBOARD.ADD_NEW_PROJECT' | translate}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #popContent>
+  {{'DASHBOARD.COMPANY_PROJECTS_INDICATOR' | translate}}
+</ng-template>

@@ -1,0 +1,185 @@
+<ng-container *ngIf="!formControl">
+  <ng-select
+    [items]="items"
+    [bindValue]="bindValue"
+    [bindLabel]="bindLabel"
+    [searchable]="searchable"
+    [clearable]="clearable"
+    [(ngModel)]="value"
+    [markFirst]="true"
+    [notFoundText]="notFoundText"
+    [placeholder]="placeholder"
+    [multiple]="multiple"
+    [closeOnSelect]="closeOnSelect"
+    [hideSelected]="hideSelected"
+    (change)="onSelectChange($event)"
+    (close)="onSelectClose($event)"
+    #ngSelect
+    [appendTo]="appendTo"
+    class="custom"
+    [ngStyle]="selectStyles"
+    [ngClass]="classes"
+  >
+    <ng-template ng-label-tmp let-label="label" let-item="item">
+      <ng-template
+        [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
+        [ngTemplateOutletContext]="{
+          label: (item && item[bindLabel] ? (translateLabels ? (item[bindLabel] | translate) : item[bindLabel]): ''),
+          item: (item || {})
+        }"
+      ></ng-template>
+      <ng-template #defaultLabelTemplate let-label="label" let-item="item">
+        <div class="ng-select-custom-label">
+          {{ label }}
+        </div>
+      </ng-template>
+    </ng-template>
+    <ng-template ng-option-tmp let-index="index">
+      <ng-template
+        [ngTemplateOutlet]="optionTemplate || defaultTemplate"
+        [ngTemplateOutletContext]="{
+          label: (items[index] && items[index][bindLabel] ? (translateLabels ? (items[index][bindLabel] | translate) : items[index][bindLabel]): ''),
+          item: (items[index] || {})
+        }"
+      ></ng-template>
+      <ng-template #defaultTemplate let-label="label" let-item="item">
+        <div class="ng-select-custom-option">
+          {{ label }}
+        </div>
+      </ng-template>
+    </ng-template>
+    <ng-container *ngIf="multiple && !showMultiple">
+      <ng-template
+        ng-multi-label-tmp
+        let-items="items"
+        let-clear="clear"
+      >
+        <div class="ng-placeholder d-block">
+          {{placeholder}}
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-container *ngIf="multiple && showMultiple">
+      <ng-template
+        ng-multi-label-tmp
+        let-items="items"
+        let-clear="clear"
+      >
+        <div
+          class="ng-value"
+          *ngFor="let item of items | slice:0:1"
+        >
+            <span class="ng-value-label">
+              {{
+                translateLabels ?
+                  (
+                    (item.label | translate).length > 8 ?
+                      (item.label | translate).slice(0,8) + '...' : (item.label | translate)
+                  ) : (
+                    item.label.length > 8 ?
+                      (item.label).slice(0,8) + '...' : item.label
+                  )
+              }}
+            </span>
+            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+        </div>
+        <div class="ng-value" *ngIf="items.length > 1">
+            <span class="ng-value-label">{{items.length - 1}} more...</span>
+        </div>
+      </ng-template>
+    </ng-container>
+  </ng-select>
+</ng-container>
+
+<ng-container *ngIf="formControl">
+  <ng-select
+    [items]="items"
+    [bindValue]="bindValue"
+    [bindLabel]="bindLabel"
+    [searchable]="searchable"
+    [clearable]="clearable"
+    [formControl]="formControl"
+    [markFirst]="true"
+    [notFoundText]="notFoundText"
+    [placeholder]="placeholder"
+    [multiple]="multiple"
+    [closeOnSelect]="closeOnSelect"
+    [hideSelected]="hideSelected"
+    (change)="onSelectChange($event)"
+    (close)="onSelectClose($event)"
+    #ngSelect
+    [appendTo]="appendTo"
+    class="custom"
+    [ngStyle]="selectStyles"
+  >
+    <ng-template ng-label-tmp let-label="label" let-item="item">
+      <ng-template
+        [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
+        [ngTemplateOutletContext]="{
+          label: (item && item[bindLabel] ? (translateLabels ? (item[bindLabel] | translate) : item[bindLabel]): ''),
+          item: (item || {})
+        }"
+      ></ng-template>
+      <ng-template #defaultLabelTemplate let-label="label" let-item="item">
+        <div class="ng-select-custom-label">
+          {{ label }}
+        </div>
+      </ng-template>
+    </ng-template>
+
+    <ng-template ng-option-tmp let-index="index">
+      <ng-template
+        [ngTemplateOutlet]="optionTemplate || defaultTemplate"
+        [ngTemplateOutletContext]="{
+          label: (items[index] && items[index][bindLabel] ? (translateLabels ? (items[index][bindLabel] | translate) : items[index][bindLabel]): ''),
+          item: (items[index] || {})
+        }"
+      ></ng-template>
+      <ng-template #defaultTemplate let-label="label" let-item="item">
+        <div class="ng-select-custom-option">
+          {{ label }}
+        </div>
+      </ng-template>
+    </ng-template>
+    <ng-container *ngIf="multiple && !showMultiple">
+      <ng-template
+        ng-multi-label-tmp
+        let-items="items"
+        let-clear="clear"
+      >
+        <div class="ng-placeholder d-block">
+          {{placeholder}}
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-container *ngIf="multiple && showMultiple">
+      <ng-template
+        ng-multi-label-tmp
+        let-items="items"
+        let-clear="clear"
+      >
+        <div
+          class="ng-value"
+          *ngFor="let item of items | slice:0:1"
+        >
+            <span class="ng-value-label">
+              {{
+                translateLabels ?
+                  (
+                    (item.label | translate).length > 8 ?
+                      (item.label | translate).slice(0,8) + '...' : (item.label | translate)
+                  ) : (
+                    item.label.length > 8 ?
+                      (item.label).slice(0,8) + '...' : item.label
+                  )
+              }}
+            </span>
+            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+        </div>
+        <div class="ng-value" *ngIf="items.length > 1">
+            <span class="ng-value-label">{{items.length - 1}} more...</span>
+        </div>
+      </ng-template>
+    </ng-container>
+  </ng-select>
+</ng-container>
